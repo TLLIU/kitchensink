@@ -1,0 +1,1 @@
+package org.jboss.as.quickstarts.kitchensink.dao;

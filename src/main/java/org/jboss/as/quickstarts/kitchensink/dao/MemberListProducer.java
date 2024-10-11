@@ -12,7 +12,7 @@ import org.springframework.web.context.WebApplicationContext;
 
 import jakarta.annotation.PostConstruct;
 
-@Component
+@Component("memberList")
 @Scope(WebApplicationContext.SCOPE_APPLICATION)
 public class MemberListProducer {
 
@@ -25,10 +25,6 @@ public class MemberListProducer {
     this.memberRepository = memberRepository;
   }
 
-  // @Named provides access the return value via the EL variable name "members" in the UI (e.g.
-  // Facelets or JSP view)
-//  @Produces
-//  @Named
   public List<Member> getMembers() {
       return members;
   }

@@ -11,15 +11,18 @@ import org.jboss.as.quickstarts.kitchensink.service.MemberRegistration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.server.ResponseStatusException;
 
 import jakarta.validation.ConstraintViolation;
@@ -29,6 +32,7 @@ import jakarta.validation.Validator;
 import jakarta.validation.constraints.Pattern;
 
 @Controller
+@Scope(WebApplicationContext.SCOPE_REQUEST)
 @RequestMapping(value="/members", produces= {"application/json"})
 public class MemberResourceRESTService {
   private static final Logger log = LoggerFactory.getLogger(MemberResourceRESTService.class);
@@ -43,12 +47,14 @@ public class MemberResourceRESTService {
   }
   
   @GetMapping(value="")
-  public List<Member> listAllMembers() {
-      return repository.findAllByOrderByNameAsc().toList();
+  public String listAllMembers(Model model) {
+    model.addAttribute("members", repository.findAllByOrderByNameAsc().toList());
+      return "members";
   }
 
   @GetMapping(value="/{id}")
-  public Member lookupMemberById(@PathVariable("id") @Pattern(regexp = "[0-9][0-9]*") long id) {
+  public Member lookupMemberById(@PathVariable("id") @Pattern(regexp = "[0-9][0-9]*") long id, Model model) {
+    
     return repository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
   }
 

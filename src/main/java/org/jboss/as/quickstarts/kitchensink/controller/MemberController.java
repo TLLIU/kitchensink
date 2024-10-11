@@ -4,24 +4,31 @@ import org.jboss.as.quickstarts.kitchensink.model.Member;
 import org.jboss.as.quickstarts.kitchensink.service.MemberRegistration;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.bind.Name;
+import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
+import org.springframework.web.context.WebApplicationContext;
+
 
 import jakarta.annotation.PostConstruct;
+import jakarta.enterprise.context.RequestScoped;
 import jakarta.faces.application.FacesMessage;
 import jakarta.faces.context.FacesContext;
 
-@Component
+@Component("memberController")
+@Scope(WebApplicationContext.SCOPE_REQUEST)
 public class MemberController {
 
-    @Autowired
-    private FacesContext facesContext;
+    //@Autowired
+    //private FacesContext facesContext;
 
     @Autowired
     private MemberRegistration memberRegistration;
 
-//    @Produces
-//    @Name
     private Member newMember;
+    
+    public Member getNewMember() {
+      return newMember;
+    }
 
     @PostConstruct
     public void initNewMember() {
@@ -29,7 +36,7 @@ public class MemberController {
     }
 
     public void register() throws Exception {
-      //FacesContext facesContext = FacesContext.getCurrentInstance();
+      FacesContext facesContext = FacesContext.getCurrentInstance();
         try {
             memberRegistration.register(newMember);
             FacesMessage m = new FacesMessage(FacesMessage.SEVERITY_INFO, "Registered!", "Registration successful");

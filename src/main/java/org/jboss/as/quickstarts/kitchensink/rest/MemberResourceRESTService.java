@@ -47,13 +47,12 @@ public class MemberResourceRESTService {
   }
   
   @GetMapping(value="")
-  public String listAllMembers(Model model) {
-    model.addAttribute("members", repository.findAllByOrderByNameAsc().toList());
-      return "members";
+  public List<Member> listAllMembers() {
+	  return repository.findAllByOrderByNameAsc().toList();
   }
 
   @GetMapping(value="/{id}")
-  public Member lookupMemberById(@PathVariable("id") @Pattern(regexp = "[0-9][0-9]*") long id, Model model) {
+  public Member lookupMemberById(@PathVariable("id") long id) {
     
     return repository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
   }
